@@ -1,6 +1,4 @@
-.idea/
-.env
-.tmp/
+.idea
+tmp
 venv
-.multi-ai-agent-systems.iml
-# asdadasd.env
+.env
