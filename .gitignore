@@ -1,4 +1,4 @@
-.idea
-tmp
-venv
+.idea/
+tmp/
+venv/
 .env
