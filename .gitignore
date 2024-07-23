@@ -1,0 +1,5 @@
+.idea/
+.env
+.tmp/
+.venv/
+.multi-ai-agent-systems.iml
