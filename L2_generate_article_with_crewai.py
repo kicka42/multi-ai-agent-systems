@@ -1,3 +1,5 @@
+# Agents to research and write an article
+
 # with CrewAI framework
 # We're going to build 3 AI agents: a planner, a writer and an editor to help us write an article.
 # The planner will help us to decide what

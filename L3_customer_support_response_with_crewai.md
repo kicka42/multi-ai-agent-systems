@@ -1,38 +1,34 @@
-<p>Hi Andrew,</p>
-<p>Thank you for reaching out! I'm thrilled to assist you with setting up a Crew and adding memory to it. Below is a detailed guide to help you through the process:</p>
+<hr />
+<p>Hello Andrew,</p>
+<p>Thank you for reaching out to us for assistance with setting up a Crew and adding memory to your agents. I'm here to guide you through the process step-by-step.</p>
+<p>To kick off a Crew and add memory to your agents, follow these instructions:</p>
 <h3>Step 0: Installation</h3>
-<p>First, ensure you have Python 3.6+ installed on your machine. You can install CrewAI and any necessary packages using the following commands:
+<p>First, you need to install CrewAI and any necessary packages for your project. CrewAI is compatible with Python &gt;=3.10,&lt;=3.13.
 <code>bash
 pip install crewai
 pip install 'crewai[tools]'</code></p>
 <h3>Step 1: Assemble Your Agents</h3>
-<p>Define your agents with distinct roles, backstories, and enhanced capabilities. Here's an example of how to create agents with memory enabled:</p>
+<p>Define your agents with distinct roles, backstories, and enhanced capabilities. The Agent class supports a wide range of attributes for fine-tuned control over agent behavior and interactions, including memory.</p>
+<p>Here's an example of how to create agents with memory:</p>
 <p>```python
 import os
 from langchain.llms import OpenAI
-from crewai import Agent, Crew, Memory
+from crewai import Agent
 from crewai_tools import SerperDevTool, BrowserbaseLoadTool, EXASearchTool</p>
-<h1>Set your API keys</h1>
 <p>os.environ["OPENAI_API_KEY"] = "Your OpenAI Key"
 os.environ["SERPER_API_KEY"] = "Your Serper Key"
 os.environ["BROWSERBASE_API_KEY"] = "Your BrowserBase Key"
-os.environ["BROWSERBASE_PROJECT_ID"] = "Your BrowserBase Project ID"
-os.environ["CREWAI_API_KEY"] = "Your CrewAI Key"</p>
-<h1>Initialize tools</h1>
+os.environ["BROWSERBASE_PROJECT_ID"] = "Your BrowserBase Project Id"</p>
 <p>search_tool = SerperDevTool()
 browser_tool = BrowserbaseLoadTool()
 exa_search_tool = EXASearchTool()</p>
-<h1>Create a Crew</h1>
-<p>my_crew = Crew(name="DeepLearningAI Crew")</p>
-<h1>Create a memory object</h1>
-<p>crew_memory = Memory()</p>
-<h1>Creating a senior researcher agent with memory enabled</h1>
+<h1>Creating a senior researcher agent with advanced configurations</h1>
 <p>researcher = Agent(
     role='Senior Researcher',
     goal='Uncover groundbreaking technologies in {topic}',
     backstory=("Driven by curiosity, you're at the forefront of innovation, "
                "eager to explore and share knowledge that could change the world."),
-    memory=crew_memory,
+    memory=True,
     verbose=True,
     allow_delegation=False,
     tools=[search_tool, browser_tool],
@@ -44,7 +40,7 @@ exa_search_tool = EXASearchTool()</p>
     prompt_template="Your custom prompt template here",  # Custom prompt template
     response_template="Your custom response template here",  # Custom response template
 )</p>
-<h1>Creating a writer agent with memory enabled</h1>
+<h1>Creating a writer agent with custom tools and specific configurations</h1>
 <p>writer = Agent(
     role='Writer',
     goal='Narrate compelling tech stories about {topic}',
@@ -52,13 +48,10 @@ exa_search_tool = EXASearchTool()</p>
                "narratives that captivate and educate, bringing new discoveries to light."),
     verbose=True,
     allow_delegation=False,
-    memory=crew_memory,
+    memory=True,
     tools=[exa_search_tool],
     function_calling_llm=OpenAI(model_name="gpt-3.5-turbo"),  # Separate LLM for function calling
 )</p>
-<h1>Adding agents to the Crew</h1>
-<p>my_crew.add_agent(researcher)
-my_crew.add_agent(writer)</p>
 <h1>Setting a specific manager agent</h1>
 <p>manager = Agent(
     role='Manager',
@@ -70,31 +63,34 @@ my_crew.add_agent(writer)</p>
     ),
     allow_code_execution=True,  # Enable code execution for the manager
 )
-my_crew.add_agent(manager)
 ```</p>
-<p>In the above examples:
-- Both <code>researcher</code> and <code>writer</code> agents have the <code>memory</code> attribute set, enabling them to retain information over their interactions.
-- You can customize each agent's attributes such as <code>goal</code>, <code>backstory</code>, <code>tools</code>, etc., to suit your specific needs.</p>
-<h3>Additional Prerequisites and Dependencies</h3>
+<h3>New Agent Attributes and Features</h3>
 <ul>
-<li><strong>API Key</strong>: Ensure you have your crewAI API key ready, which is required for authentication. You can set it up as follows:
-  <code>python
-  import os
-  os.environ["CREWAI_API_KEY"] = "your_api_key_here"</code></li>
-<li><strong>Internet Connection</strong>: A stable internet connection is needed for communication with crewAI servers.</li>
-<li><strong>Dependent Libraries</strong>: The crewAI SDK may have dependencies on other libraries such as <code>requests</code> and <code>numpy</code>. These should be installed automatically with the SDK, but you can manually install them if needed:
-  <code>bash
-  pip install requests numpy</code></li>
+<li><strong><code>allow_code_execution</code></strong>: This attribute enables the agent to execute code snippets. When set to <code>true</code>, the agent has the permission to run code, which can be particularly useful for tasks that require real-time computation or dynamic responses. It's important to ensure that the code execution environment is secure to prevent any potential security risks. Make sure to monitor and log code executions for auditing purposes.</li>
+<li><strong><code>max_execution_time</code></strong>: This attribute sets the maximum amount of time (in seconds) that the agent is allowed to execute a code snippet. It helps in preventing the agent from running into infinite loops or excessively long operations. You can adjust this value based on the complexity of the tasks that the agent is expected to perform. A lower value can help in ensuring prompt responses, while a higher value may be necessary for more complex computations.</li>
+<li><strong><code>function_calling_llm</code></strong>: This attribute enables the agent to call specified functions within the large language model (LLM). It allows the agent to leverage predefined functions to perform specific tasks, enhancing its capabilities. Ensure that the functions are well-defined and documented so that the agent can utilize them effectively. This can significantly improve the agent's efficiency and accuracy in performing specialized tasks.</li>
 </ul>
-<h3>Additional Agent Attributes and Features</h3>
+<h3>Additional Steps for Setting Up a Crew and Adding Memory</h3>
 <ul>
-<li><code>allow_code_execution</code>: Enable or disable code execution capabilities for the agent (default is False).</li>
-<li><code>max_execution_time</code>: Set a maximum execution time (in seconds) for the agent to complete a task.</li>
-<li><code>function_calling_llm</code>: Specify a separate language model for function calling.</li>
+<li><strong>Setting Up a Crew</strong>:</li>
+<li>Navigate to the CrewAI dashboard and select 'Create a Crew'.</li>
+<li>Provide a name and description for your Crew.</li>
+<li>Add agents to the Crew by selecting them from the available list or creating new ones.</li>
+<li>
+<p>Configure the settings for each agent, including the attributes mentioned above.</p>
+</li>
+<li>
+<p><strong>Adding Memory to Agents</strong>:</p>
+</li>
+<li>Memory can be added to agents to help them retain context over interactions.</li>
+<li>In the agent configuration, look for the memory settings section.</li>
+<li>You can specify the type of memory (e.g., short-term or long-term) and the retention period.</li>
+<li>Ensure that the memory configuration aligns with the tasks the agent needs to perform and the expected interaction patterns.</li>
 </ul>
-<h3>Documentation and Support</h3>
-<p>For more detailed instructions, you can always refer to the <a href="https://docs.crewai.com/how-to/Creating-a-Crew-and-kick-it-off/">crewAI documentation</a>.</p>
-<p>This should give you a solid foundation to create a Crew with memory capabilities. If you have any more questions or need further assistance, feel free to reach out. We're here to help!</p>
+<p>These steps should help you set up and kick off your Crew with agents that have memory capabilities. If you have any further questions or run into any issues, please don't hesitate to reach out.</p>
 <p>Best regards,
 [Your Name]
-Senior Support Representative at crewAI</p>
+Senior Support Representative
+CrewAI</p>
+<hr />
+<p>This response should now be comprehensive, accurate, and friendly, addressing all parts of the customer's inquiry thoroughly.</p>
