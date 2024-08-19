@@ -17,9 +17,6 @@ from crewai_tools import BaseTool
 
 from IPython.display import Markdown
 
-
-warnings.filterwarnings('ignore')
-
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -81,7 +78,7 @@ lead_sales_rep_agent = Agent(
 directory_read_tool = DirectoryReadTool(directory='./instructions')
 # FileReadTool - allows your agent to read any file that it wants
 file_read_tool = FileReadTool()
-# SerperDevTool - allows search internet and google
+# SerperDevTool - allows search internet and google and return results back
 search_tool = SerperDevTool()
 
 # Create custom tool
