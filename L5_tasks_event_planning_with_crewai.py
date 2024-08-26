@@ -1,11 +1,10 @@
-# TEN PLIK CIAGLE MI NIE DZIALA
 # Automate Event Planning 1
 
 import os
 import sys
 import json
 import atexit
-
+import time
 
 from dotenv import load_dotenv
 from crewai import Agent, Crew, Task
@@ -60,7 +59,7 @@ logistics_manager = Agent(
     role='Logistics Manager',
     goal=(
         "Manage all logistics for the event "
-        "including catering and equipment"
+        "including catering and equipmen"
     ),
     tools=[search_tool, scrape_tool],
     verbose=True,
@@ -114,7 +113,7 @@ venue_task = Task(
                     "venue you found to accommodate the event.",
     human_input=True,
     output_json=VenueDetails,
-    output_file="L5_venue_details.json",
+    output_file="venue_details.json",
     # Outputs the venue details as a JSON file
     agent=venue_coordinator
 )
@@ -181,19 +180,33 @@ event_details = {
 # When it asks for feedback, use mouse pointer
 # to first click in the text box before typing anything.
 
-result = event_management_crew.kickoff(inputs=event_details)
+try:
+    print("Starting crew execution...")
+    result = event_management_crew.kickoff(inputs=event_details)
+    print("Crew execution completed.")
 
-def shutdown_hook():
-    # Ensure all tasks and tools are cleaned up
-    if event_management_crew:
-        event_management_crew.shutdown_gracefully()  # Hypothetical method
+    # Wait for 45 seconds
+    print("Waiting 45 seconds for the marketing report to be generated...")
+    time.sleep(45)
 
-atexit.register(shutdown_hook)
+    # Process results
+    if os.path.exists('L5_venue_details.json'):
+        with open('L5_venue_details.json') as f:
+            data = json.load(f)
+        print("Venue details:")
+        pprint(data)
+    else:
+        print("Venue details file not found.")
 
-with open('L5_venue_details.json') as f:
-    data = json.load(f)
+    if os.path.exists('L5_marketing_report.md'):
+        print("\nMarketing Report:")
+        with open('L5_marketing_report.md', 'r') as f:
+            print(f.read())
+    else:
+        print("Marketing report file not found.")
 
-pprint(data)
+except Exception as e:
+    print(f"An error occurred: {e}")
 
-Markdown("L5_marketing_report.md")
+print("Program execution completed.")
 
